@@ -23,7 +23,6 @@ max_x = min_x + (width * res_x)
 min_y = max_y - (height * res_y)
 print(f"Processing Area: Lon {min_x:.4f} to {max_x:.4f}, Lat {min_y:.4f} to {max_y:.4f} ")
 
-#regrid MSL Model to processing area and resolution
 gdal.Warp(
     temp_msl, 
     msl_raster, 
@@ -54,5 +53,6 @@ ds_msl = None
 
 if os.path.exists(temp_msl):
     os.remove(temp_msl)
+
 
 print(f"Result saved as: {output_raster}")
