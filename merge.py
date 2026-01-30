@@ -14,6 +14,7 @@ xmin, xmax = 134.02, 134.20
 ymin, ymax = -0.95, -0.75
 boundaries = [xmin, ymax, xmax, ymin] # [ulx, uly, lrx, lry]
 
+# set resolution (in degrees)
 res = 0.0004166666667
 
 #Combining DEMNAS-BATNAS xyz
@@ -26,7 +27,6 @@ mask = (all_points[:,0] >= xmin) & (all_points[:,0] <= xmax) & \
 filtered_points = all_points[mask]
 print(f"Total points to interpolate: {len(filtered_points)}")
 
-# create in-memory vectior layer
 mem_driver = ogr.GetDriverByName("Memory")
 mem_ds = mem_driver.CreateDataSource("mem_ds")
 srs = osr.SpatialReference()
@@ -43,7 +43,6 @@ for i in range(len(filtered_points)):
     layer.CreateFeature(feat)
     feat = None
 
-# Interpolation
 width = int((xmax - xmin) / res) + 1
 height = int((ymax - ymin) / res) + 1
 
@@ -57,7 +56,6 @@ gdal.Grid(
     height=height,
     outputBounds=boundaries,
     outputSRS='EPSG:4326',
-    # Linear interpolation bridges the gap between different densities well
     algorithm=f'linear:radius=0.002', 
     zfield="Z",
     outputType=gdal.GDT_Float32
@@ -65,4 +63,5 @@ gdal.Grid(
 
 # Cleanup
 mem_ds = None
+
 print(f"Output: {output_tif}")
